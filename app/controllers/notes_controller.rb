@@ -1,5 +1,10 @@
 class NotesController < ApplicationController
   def index
+    @notes = Note.order(id: :desc)
+  end
+
+  def show
+    @note = Note.find(params[:id])
   end
 
   def new
@@ -7,16 +12,16 @@ class NotesController < ApplicationController
   end
 
   def create
-    render html: params[:note]
-    note = Note.new(params[:note])
-    title = params[:title]
-    content = params[:content]
-    note = Note.new(title: title, content: content)
+    # Strong Parameter
+    clean_note = params.require(:note).permit(:title, :content)
+    @note = Note.new(clean_note)
 
-    if note.save
+    if @note.save
       redirect_to "/notes"
     else
       # 待處理
+      render :new
+      redirect_to "/notes/new"
     end    
   end
 end
