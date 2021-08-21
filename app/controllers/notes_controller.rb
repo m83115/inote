@@ -38,7 +38,7 @@ class NotesController < ApplicationController
   end
 
   def destroy
-    @note.destroy
+    @note.destroy(dateted_at Time.now)
     redirect_to "/notes"
   end
 
